@@ -19,6 +19,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/users/import', 'Api\v1\UserController@excelImportView')->name('users.import.view');
+Route::post('/users/import-data', 'Api\v1\UserController@excelImport')->name('users.import');
+
 Route::get('/email/verify/{hash}', 'Api\v1\UserController@verifyEmail')->name('email.verify');
 
 Route::get('auth/google', function () {

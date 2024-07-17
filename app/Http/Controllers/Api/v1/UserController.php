@@ -10,7 +10,9 @@ use App\Http\Requests\Api\v1\LoginRequest;
 use App\Http\Requests\Api\v1\SocialLoginRequest;
 use App\Http\Requests\Api\v1\UserCreateRequest;
 use App\Http\Requests\Api\v1\UserIndexRequest;
+use App\Http\Requests\Api\v1\UsersExcelImportRequest;
 use App\Http\Requests\Api\v1\UserUpdateRequest;
+use App\Imports\UserImport;
 use App\Models\Badge;
 use App\Models\User;
 use App\Models\UserBadge;
@@ -364,5 +366,15 @@ class UserController extends Controller
     public function excelExport()
     {
         return Excel::download(new UserExport, 'user_export_' . Carbon::now()->format('Y-m-d H:i:s') . '.xlsx', \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function excelImportView() {
+        return view('excel_imports.user_import');
+    }
+
+    public function excelImport(UsersExcelImportRequest $request) {
+        Excel::import(new UserImport(), $request->file('import_file'));
+
+        return redirect()->back()->with('status', __('messages.import_success'));
     }
 }
